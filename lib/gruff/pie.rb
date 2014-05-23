@@ -21,11 +21,15 @@ class Gruff::Pie < Gruff::Base
   # Do not show labels for slices that are less than this percent. Use 0 to always show all labels.
   # Defaults to 0
   attr_accessor :hide_labels_less_than
+  # Set the precision of labels, as the number of digits after the decimal.
+  # Defaults to 0
+  attr_accessor :label_precision
 
   def initialize_ivars
     super
     @zero_degree = 0.0
     @hide_labels_less_than = 0.0
+    @label_precision = 0
   end
 
   def draw
@@ -61,7 +65,7 @@ class Gruff::Pie < Gruff::Base
                   
         half_angle = prev_degrees + ((prev_degrees + current_degrees) - prev_degrees) / 2
         
-        label_val = ((data_row[DATA_VALUES_INDEX].first / total_sum) * 100.0).round
+        label_val = ((data_row[DATA_VALUES_INDEX].first / total_sum) * 100.0).round(@label_precision)
         unless label_val < @hide_labels_less_than
           # RMagick must use sprintf with the string and % has special significance.
           label_string = label_val.to_s + '%'
